@@ -40,13 +40,16 @@
 #endif
 
 #include "gralloc_priv.h"
-#include "gr.h"
+
+inline size_t roundUpToPageSize(size_t x) {
+    return (x + (PAGE_SIZE-1)) & ~(PAGE_SIZE-1);
+}
 
 /*****************************************************************************/
 
 // numbers of buffers for page flipping
 #define NUM_BUFFERS 2
-#define HWC_EXIST 0
+#define HWC_EXIST 1
 
 struct hwc_callback_entry
 {
@@ -136,6 +139,7 @@ int init_fb(struct private_module_t* module)
 
     int fd = -1;
     int i = 0;
+    char name[64];
 
     fd = open("/dev/graphics/fb0", O_RDWR);
     if (fd < 0) {

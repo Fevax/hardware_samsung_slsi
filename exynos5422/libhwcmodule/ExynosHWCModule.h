@@ -27,11 +27,13 @@
 #define FIMD_ADDED_BURSTLEN_BYTES     4
 #define FIMD_BW_OVERLAP_CHECK
 
-#define TRY_SECOND_VSYNC_DEV
+/* Comentado para eliminar duplicados
+ * 
+ * #define TRY_SECOND_VSYNC_DEV  
 #ifdef TRY_SECOND_VSYNC_DEV
 #define VSYNC_DEV_NAME2  "exynos5-fb.1/vsync"
 #define VSYNC_DEV_MIDDLE2  "platform/exynos-sysmmu.30/exynos-sysmmu.11/"
-#endif
+#endif*/
 
 #define DUAL_VIDEO_OVERLAY_SUPPORT
 
