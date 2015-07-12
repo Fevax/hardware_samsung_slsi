@@ -2,39 +2,6 @@ LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_SRC_FILES := \
-	csc_helper.c
-
-LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)
-
-ifneq ($(BOARD_USE_KHRONOS_OMX_HEADER),true)
-LOCAL_C_INCLUDES += \
-	frameworks/native/include/media/openmax
-endif
-
-LOCAL_C_INCLUDES += \
-	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
-	system/core/include \
-	hardware/samsung_slsi/openmax/include/khronos \
-	hardware/samsung_slsi/openmax/include/exynos \
-	hardware/samsung_slsi/exynos5-insignal/include \
-	$(LOCAL_PATH)/../include
-
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
-
-LOCAL_CFLAGS := \
-	-DUSE_SAMSUNG_COLORFORMAT \
-	-DEXYNOS_OMX
-
-LOCAL_MODULE := libcsc_helper
-LOCAL_MODULE_TAGS := optional
-LOCAL_STATIC_LIBRARIES := liblog
-
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := \
@@ -42,7 +9,7 @@ LOCAL_SRC_FILES := \
 
 LOCAL_C_INCLUDES := \
 	$(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include \
-	hardware/samsung_slsi/exynos5-insignal/include \
+	hardware/samsung_slsi/exynos5/include \
 	hardware/samsung_slsi/openmax/include/khronos \
 	hardware/samsung_slsi/openmax/include/exynos \
 	$(LOCAL_PATH)/../include \
@@ -62,7 +29,6 @@ LOCAL_PRELINK_MODULE := false
 LOCAL_ARM_MODE := arm
 
 LOCAL_STATIC_LIBRARIES := libswconverter
-LOCAL_WHOLE_STATIC_LIBRARIES := libcsc_helper
 LOCAL_SHARED_LIBRARIES := liblog libexynosutils
 
 LOCAL_CFLAGS += -DUSE_SAMSUNG_COLORFORMAT
