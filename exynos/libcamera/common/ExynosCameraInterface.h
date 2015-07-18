@@ -317,23 +317,23 @@ static hw_module_methods_t camera_module_methods = {
 
 extern "C" {
     struct camera_module HAL_MODULE_INFO_SYM = {
-      common : {
-          tag                : HARDWARE_MODULE_TAG,
-          module_api_version : CAMERA_MODULE_API_VERSION_1_0,
-          hal_api_version    : HARDWARE_HAL_API_VERSION,
-          id                 : CAMERA_HARDWARE_MODULE_ID,
-          name               : "Exynos Camera HAL1",
-          author             : "Samsung Corporation",
-          methods            : &camera_module_methods,
-          dso                : NULL,
-          reserved           : {0},
+      .common = {
+          .tag = HARDWARE_MODULE_TAG,
+          .module_api_version = CAMERA_MODULE_API_VERSION_1_0,
+          .hal_api_version = HARDWARE_HAL_API_VERSION,
+          .id = CAMERA_HARDWARE_MODULE_ID,
+          .name = "Exynos Camera HAL1",
+          .author = "Samsung Corporation",
+          .methods = &camera_module_methods,
+          .dso = NULL,
+          .reserved = {0},
       },
-      get_number_of_cameras : HAL_getNumberOfCameras,
-      get_camera_info       : HAL_getCameraInfo,
-      set_callbacks         : HAL_set_callbacks,
+      .get_number_of_cameras = HAL_getNumberOfCameras,
+      .get_camera_info = HAL_getCameraInfo,
+      .set_callbacks = HAL_set_callbacks,
 #if (TARGET_ANDROID_VER_MAJ >= 4 && TARGET_ANDROID_VER_MIN >= 4)
-      get_vendor_tag_ops    : NULL,
-      reserved              : {0}
+      .get_vendor_tag_ops = NULL,
+      .reserved = {0}
 #endif
     };
 }
