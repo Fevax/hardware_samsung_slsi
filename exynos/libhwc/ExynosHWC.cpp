@@ -25,7 +25,7 @@ class ExynosHWCService;
 #endif
 
 #ifdef USES_WFD_SERVICE
-#include "WFDService.h"
+/*#include "WFDService.h"*/
 namespace android {
     class WFDService;
 }

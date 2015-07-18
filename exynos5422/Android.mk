@@ -24,6 +24,11 @@ exynos5422_dirs := \
 	libhwjpeg \
 	libsecurepath 
 
+ifeq ($(BOARD_USES_LIBEXYNOSCAMERA),true)
+exynos5422_dirs += \
+	libcamera
+endif
+	
 ifeq ($(BOARD_USES_VIRTUAL_DISPLAY), true)
 exynos5422_dirs += \
 	libvirtualdisplaymodule

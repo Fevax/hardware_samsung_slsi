@@ -60,7 +60,9 @@ ExynosCameraFrame::~ExynosCameraFrame()
 
             while (curEntity != NULL) {
                 tmpEntity = curEntity->getNextEntity();
-                ALOGV("DEBUG(%s[%d])", __FUNCTION__, curEntity->pipeId);
+                /*fuck this log. it breaks compiler and everything.  - duki994*/
+                /* Question why is pipeId not member of ExynosCameraFrameEntity class when it is */
+                /*ALOGV("DEBUG(%s[%d])", __FUNCTION__, curEntity->pipeId);*/
 
                 delete curEntity;
                 curEntity = tmpEntity;
