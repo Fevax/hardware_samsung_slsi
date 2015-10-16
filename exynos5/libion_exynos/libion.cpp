@@ -94,14 +94,6 @@ ion_buffer ion_alloc(ion_client client, size_t len, size_t align,
     arg_share.handle = arg_alloc.handle;
     ret = ioctl(client, ION_IOC_SHARE, &arg_share);
 
-    if ((ret >= 0) && (!arg_share.fd)) {
-        ret = ioctl(client, ION_IOC_SHARE, &arg_share);
-        if (ret >= 0)
-            close(0);
-        else
-            ret = 0;
-    }
-
     arg_free.handle = arg_alloc.handle;
     ioctl(client, ION_IOC_FREE, &arg_free);
 
@@ -144,9 +136,8 @@ int ion_incRef(int fd, int share_fd, unsigned long **handle)
 
     int ret = ioctl(fd, ION_IOC_IMPORT, &data);
     if (ret < 0)
-        return ret;
-
-    *handle = (unsigned long *)(data.handle);
+            return ret;
+    *handle = (unsigned long*)(data.handle);
     return ret;
 }
 

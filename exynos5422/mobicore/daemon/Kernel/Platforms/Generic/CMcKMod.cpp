@@ -133,15 +133,15 @@ mcResult_t CMcKMod::mapMCI(
         LOG_ERRNO("mmap");
         return MAKE_MC_DRV_KMOD_WITH_ERRNO(errno);
     }
-    mapParams.addr = (unsigned long)virtAddr;
+    unsigned long addr = (unsigned long)virtAddr;
     *pReuse = mapParams.reused;
 
     LOG_V(" MCI mapped to %p, handle=%d, phys=%p, reused=%s",
-          (void *)mapParams.addr, mapParams.handle, (addr_t) (mapParams.phys_addr),
+          (void *)addr, mapParams.handle, (addr_t) (mapParams.phys_addr),
           mapParams.reused ? "true" : "false");
 
     if (pVirtAddr != NULL) {
-        *pVirtAddr = (void *)mapParams.addr;
+        *pVirtAddr = (void *)addr;
     }
 
     if (pHandle != NULL) {
@@ -217,7 +217,6 @@ int CMcKMod::fcInit(uint32_t nqOffset, uint32_t nqLength, uint32_t mcpOffset,
 
     // Init MC with NQ and MCP buffer addresses
     struct mc_ioctl_init fcInitParams = {
-        .nq_offset = nqOffset,
         .nq_length = nqLength,
         .mcp_offset = mcpOffset,
         .mcp_length = mcpLength
@@ -531,23 +530,7 @@ mcResult_t CMcKMod::setupLog(void)
 //------------------------------------------------------------------------------
 int CMcKMod::fcExecute(addr_t startAddr, uint32_t areaLength)
 {
-    int ret = 0;
-    struct mc_ioctl_execute params = {
-        .phys_start_addr = (uint32_t)startAddr,
-        .length = areaLength
-    };
-
-    if (!isOpen()) {
-        LOG_E("no connection to kmod");
-        return MC_DRV_ERR_KMOD_NOT_OPEN;
-    }
-
-    ret = ioctl(fdKMod, MC_IO_EXECUTE, &params);
-    if (ret != 0) {
-        LOG_ERRNO("ioctl MC_IO_EXECUTE");
-    }
-
-    return ret;
+    return 0;
 }
 //------------------------------------------------------------------------------
 bool CMcKMod::checkVersion(void)

@@ -65,7 +65,7 @@ typedef struct _EXYNOS_MFC_MPEG4DEC_HANDLE
     OMX_U32                    outputIndexTimestamp;
     OMX_BOOL                   bConfiguredMFCSrc;
     OMX_BOOL                   bConfiguredMFCDst;
-    OMX_S32                    maxDPBNum;
+    OMX_U32                    maxDPBNum;
     CODEC_TYPE                 codecType;
 
     ExynosVideoColorFormatType MFCOutputColorType;
@@ -73,7 +73,6 @@ typedef struct _EXYNOS_MFC_MPEG4DEC_HANDLE
     ExynosVideoDecBufferOps   *pInbufOps;
     ExynosVideoDecBufferOps   *pOutbufOps;
     ExynosVideoGeometry        codecOutbufConf;
-    ExynosVideoInstInfo        videoInstInfo;
 } EXYNOS_MFC_MPEG4DEC_HANDLE;
 
 typedef struct _EXYNOS_MPEG4DEC_HANDLE
@@ -103,8 +102,6 @@ OSCL_EXPORT_REF OMX_ERRORTYPE Exynos_OMX_ComponentInit(
     OMX_STRING componentName);
 OMX_ERRORTYPE Exynos_OMX_ComponentDeinit(
     OMX_HANDLETYPE hComponent);
-OMX_ERRORTYPE Mpeg4CodecDstSetup(
-    OMX_COMPONENTTYPE *pOMXComponent);
 
 #ifdef __cplusplus
 };

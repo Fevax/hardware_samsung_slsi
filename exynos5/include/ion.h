@@ -21,13 +21,11 @@
 
 #define ION_FLAG_CACHED 1
 #define ION_FLAG_CACHED_NEEDS_SYNC 2
-#define ION_FLAG_PRESERVE_KMAP 4
 
 #define ION_HEAP_SYSTEM_MASK            (1 << 0)
 #define ION_HEAP_SYSTEM_CONTIG_MASK     (1 << 1)
 #define ION_HEAP_EXYNOS_CONTIG_MASK     (1 << 4)
 #define ION_HEAP_EXYNOS_MASK            (1 << 5)
-#define ION_EXYNOS_VIDEO_MASK     (1 << 21)
 #define ION_EXYNOS_FIMD_VIDEO_MASK    (1 << 28)
 #define ION_EXYNOS_GSC_MASK		(1 << 27)
 #define ION_EXYNOS_MFC_OUTPUT_MASK    (1 << 26)

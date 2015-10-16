@@ -24,10 +24,9 @@
 #include "FimgExynos5.h"
 #include "sec_g2d_comp.h"
 
-extern pthread_mutex_t s_g2d_lock;
-
 namespace android
 {
+Mutex      FimgV4x::m_instanceLock;
 unsigned   FimgV4x::m_curFimgV4xIndex = 0;
 int        FimgV4x::m_numOfInstance    = 0;
 FimgApi *  FimgV4x::m_ptrFimgApiList[NUMBER_FIMG_LIST] = {NULL, };
@@ -54,9 +53,11 @@ FimgV4x::~FimgV4x()
 
 FimgApi *FimgV4x::CreateInstance()
 {
+    Mutex::Autolock autolock(m_instanceLock);
+
     FimgApi *ptrFimg = NULL;
 
-    for(int i = m_curFimgV4xIndex; i < NUMBER_FIMG_LIST; i++) {
+    for(unsigned int i = m_curFimgV4xIndex; i < NUMBER_FIMG_LIST; i++) {
         if (m_ptrFimgApiList[i] == NULL)
             m_ptrFimgApiList[i] = new FimgV4x;
 
@@ -85,7 +86,7 @@ CreateInstance_End :
 
 void FimgV4x::DestroyInstance(FimgApi * ptrFimgApi)
 {
-    pthread_mutex_lock(&s_g2d_lock);
+    Mutex::Autolock autolock(m_instanceLock);
 
     for(int i = 0; i < NUMBER_FIMG_LIST; i++) {
         if (m_ptrFimgApiList[i] != NULL && m_ptrFimgApiList[i] == ptrFimgApi) {
@@ -102,12 +103,11 @@ void FimgV4x::DestroyInstance(FimgApi * ptrFimgApi)
             break;
         }
     }
-    pthread_mutex_unlock(&s_g2d_lock);
 }
 
 void FimgV4x::DestroyAllInstance(void)
 {
-    pthread_mutex_lock(&s_g2d_lock);
+    Mutex::Autolock autolock(m_instanceLock);
 
     for (int i = 0; i < NUMBER_FIMG_LIST; i++) {
         if (m_ptrFimgApiList[i] != NULL) {
@@ -121,7 +121,6 @@ void FimgV4x::DestroyAllInstance(void)
             }
         }
     }
-    pthread_mutex_unlock(&s_g2d_lock);
 }
 
 bool FimgV4x::t_Create(void)

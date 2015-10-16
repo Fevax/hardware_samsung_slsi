@@ -29,16 +29,11 @@ typedef enum {
 /**
  * protection IP
  */
-#define CP_PROTECT_MFC		(1 << 0)
-#define CP_PROTECT_GSC0		(1 << 1)
-#define CP_PROTECT_GSC3		(1 << 2)
-#define CP_PROTECT_FIMD		(1 << 3)
-#define CP_PROTECT_MIXER	(1 << 4)
-
-#define CP_PROTECT_MFC1		(1 << 5)
-#define CP_PROTECT_GSC1		(1 << 6)
-#define CP_PROTECT_GSC2		(1 << 7)
-#define CP_PROTECT_HDMI		(1 << 8)
+#define CP_PROTECT_MFC		0x00000001
+#define CP_PROTECT_GSC0		0x00000002
+#define CP_PROTECT_GSC3		0x00000004
+#define CP_PROTECT_FIMD		0x00000008
+#define CP_PROTECT_MIXER	0x00000010
 
 
 cpResult_t CP_Enable_Path_Protection(uint32_t);

@@ -33,9 +33,9 @@
 typedef enum _MEMORY_TYPE
 {
     NORMAL_MEMORY = 0x00,
-    CACHED_MEMORY = 0x01,  /* cached */
-    CONTIG_MEMORY = 0x02,  /* continuos */
-    SECURE_MEMORY = 0x04,  /* secure */
+    SECURE_MEMORY = 0x01,
+    SYSTEM_MEMORY = 0x02,
+    CONTIG_MEMORY = 0x03,
 } MEMORY_TYPE;
 
 #ifdef __cplusplus

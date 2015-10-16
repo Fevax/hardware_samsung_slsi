@@ -34,3 +34,11 @@ PRODUCT_PACKAGES += \
 # MobiCore
 PRODUCT_PACKAGES += \
 	mcDriverDaemon
+
+# Keystore
+PRODUCT_PACKAGES += \
+	keystore.exynos5
+
+# Memory Tracker HAL
+PRODUCT_PACKAGES += \
+	memtrack.exynos5

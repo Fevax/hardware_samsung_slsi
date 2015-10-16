@@ -39,8 +39,7 @@ typedef struct _EXYNOS_MFC_H264DEC_HANDLE
     OMX_U32                    outputIndexTimestamp;
     OMX_BOOL                   bConfiguredMFCSrc;
     OMX_BOOL                   bConfiguredMFCDst;
-    OMX_S32                    maxDPBNum;
-
+    OMX_U32                    maxDPBNum;
 #ifdef USE_S3D_SUPPORT
     EXYNOS_OMX_FPARGMT_TYPE    S3DFPArgmtType;
 #endif
@@ -50,7 +49,6 @@ typedef struct _EXYNOS_MFC_H264DEC_HANDLE
     ExynosVideoDecBufferOps   *pInbufOps;
     ExynosVideoDecBufferOps   *pOutbufOps;
     ExynosVideoGeometry        codecOutbufConf;
-    ExynosVideoInstInfo        videoInstInfo;
 } EXYNOS_MFC_H264DEC_HANDLE;
 
 typedef struct _EXYNOS_H264DEC_HANDLE
@@ -76,7 +74,6 @@ extern "C" {
 
 OSCL_EXPORT_REF OMX_ERRORTYPE Exynos_OMX_ComponentInit(OMX_HANDLETYPE hComponent, OMX_STRING componentName);
 OMX_ERRORTYPE Exynos_OMX_ComponentDeinit(OMX_HANDLETYPE hComponent);
-OMX_ERRORTYPE H264CodecDstSetup(OMX_COMPONENTTYPE *pOMXComponent);
 
 #ifdef __cplusplus
 };

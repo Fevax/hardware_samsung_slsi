@@ -37,7 +37,6 @@
 #include <sys/mman.h>
 
 #include "Exynos_OSAL_Mutex.h"
-#include "Exynos_OSAL_Memory.h"
 #include "Exynos_OSAL_SharedMemory.h"
 #include "ion.h"
 
@@ -83,7 +82,7 @@ OMX_HANDLETYPE Exynos_OSAL_SharedMemory_Open()
         goto EXIT;
     }
 
-    pHandle->hIONHandle = (OMX_HANDLETYPE)IONClient;
+    pHandle->hIONHandle = IONClient;
 
     if (OMX_ErrorNone != Exynos_OSAL_MutexCreate(&pHandle->hSMMutex)) {
         Exynos_OSAL_Log(EXYNOS_LOG_ERROR, "Exynos_OSAL_MutexCreate(hSMMutex) is failed");
@@ -167,43 +166,35 @@ OMX_PTR Exynos_OSAL_SharedMemory_Alloc(OMX_HANDLETYPE handle, OMX_U32 size, MEMO
     Exynos_OSAL_Memset(pElement, 0, sizeof(EXYNOS_SHAREDMEM_LIST));
     pElement->owner = OMX_TRUE;
 
-    /* priority is like as SECURE > CONTIG > CACHED > NORMAL */
-    switch ((int)memoryType) {
-    case (SECURE_MEMORY | CONTIG_MEMORY | CACHED_MEMORY):  /* SECURE */
-    case (SECURE_MEMORY | CONTIG_MEMORY):
-    case (SECURE_MEMORY | CACHED_MEMORY):
+    switch (memoryType) {
     case SECURE_MEMORY:
         mask = ION_HEAP_EXYNOS_CONTIG_MASK;
         flag = ION_EXYNOS_MFC_INPUT_MASK;
-#ifdef USE_NON_SECURE_DRM
-        if (memoryType & CONTIG_MEMORY) {
-            mask = ION_HEAP_EXYNOS_CONTIG_MASK;
-            flag = ION_EXYNOS_VIDEO_MASK;
-        } else {
-            mask = ION_HEAP_SYSTEM_MASK;
-            flag = ION_FLAG_CACHED;
-        }
+        break;
+    case NORMAL_MEMORY:
+        mask = ION_HEAP_EXYNOS_MASK;
+        flag = 0;
+        break;
+    case SYSTEM_MEMORY:
+#ifdef USE_IMPROVED_BUFFER
+        mask = ION_HEAP_SYSTEM_MASK;
+        flag = ION_FLAG_CACHED | ION_FLAG_CACHED_NEEDS_SYNC | ION_FLAG_PRESERVE_KMAP;
+#else
+        mask = ION_HEAP_SYSTEM_MASK;
+        flag = ION_FLAG_CACHED;
 #endif
         break;
-    case (CONTIG_MEMORY | CACHED_MEMORY):  /* CONTIG */
     case CONTIG_MEMORY:
         mask = ION_HEAP_EXYNOS_CONTIG_MASK;
         flag = ION_EXYNOS_MFC_INPUT_MASK;
         break;
-    case CACHED_MEMORY:  /* CACHED */
-        mask = ION_HEAP_SYSTEM_MASK;
-        flag = ION_FLAG_CACHED;
-        break;
-    default:  /* NORMAL */
-        mask = ION_HEAP_SYSTEM_MASK;
-        flag = ION_FLAG_CACHED;
+    default:
+        Exynos_OSAL_Log(EXYNOS_LOG_ERROR, "memory type is wrong");
+        Exynos_OSAL_Free((OMX_PTR)pElement);
+        pBuffer = NULL;
+        goto EXIT;
         break;
     }
-
-#ifdef USE_IMPROVED_BUFFER
-    if (flag & ION_FLAG_CACHED)  /* use improved cache oprs */
-        flag |= ION_FLAG_CACHED_NEEDS_SYNC | ION_FLAG_PRESERVE_KMAP;
-#endif
 
     IONBuffer = ion_alloc((ion_client)pHandle->hIONHandle, size, 0, mask, flag);
     if ((IONBuffer <= 0) &&
@@ -327,7 +318,7 @@ OMX_PTR Exynos_OSAL_SharedMemory_Map(OMX_HANDLETYPE handle, OMX_U32 size, unsign
     pElement = (EXYNOS_SHAREDMEM_LIST *)Exynos_OSAL_Malloc(sizeof(EXYNOS_SHAREDMEM_LIST));
     Exynos_OSAL_Memset(pElement, 0, sizeof(EXYNOS_SHAREDMEM_LIST));
 
-    IONBuffer = (ion_buffer)ionfd;
+    IONBuffer = (OMX_PTR)ionfd;
 
     if (IONBuffer <= 0) {
         Exynos_OSAL_Log(EXYNOS_LOG_ERROR, "ion_alloc Error: %d", IONBuffer);
@@ -484,15 +475,15 @@ OMX_PTR Exynos_OSAL_SharedMemory_IONToVirt(OMX_HANDLETYPE handle, int ion_addr)
     }
 
     pCurrentElement = pSMList;
-    if (pSMList->IONBuffer == (OMX_U32)ion_addr) {
+    if (pSMList->IONBuffer == ion_addr) {
         pFindElement = pSMList;
     } else {
         while ((pCurrentElement != NULL) && (((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory)) != NULL) &&
-               (((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory))->IONBuffer != (OMX_U32)ion_addr))
+               (((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory))->IONBuffer != ion_addr))
             pCurrentElement = pCurrentElement->pNextMemory;
 
         if ((((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory)) != NULL) &&
-            (((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory))->IONBuffer == (OMX_U32)ion_addr)) {
+            (((EXYNOS_SHAREDMEM_LIST *)(pCurrentElement->pNextMemory))->IONBuffer == ion_addr)) {
             pFindElement = pCurrentElement->pNextMemory;
         } else {
             Exynos_OSAL_MutexUnlock(pHandle->hSMMutex);
